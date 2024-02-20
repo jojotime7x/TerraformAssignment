@@ -1,75 +1,76 @@
-name: Terraform CI/CD Pipeline for Deploying AWS Resources
-run-name: ${{ github.actor }} has triggered the pipeline
+# Workflow Name: Clearly indicates the purpose and target environment.
+name: Terraform CI/CD Pipeline for AWS Deployment
 
+# Triggers: Defines when the workflow should be executed.
 on:
-  push:
+  push: # Automated trigger on code push.
     branches:
-      - 'main'
+      - main # Restricts trigger to changes in the 'main' branch.
+  workflow_dispatch: # Manual trigger via GitHub UI, with optional parameters.
+    inputs:
+      destroy: # Optional input to decide if infrastructure should be destroyed.
+        description: 'Set to true to destroy infrastructure as part of this run'
+        required: false
+        default: 'false'
 
-
-
+# Jobs: Collection of tasks this workflow will execute.
 jobs:
-  build-infra:
-    name: CI/CD Pipeline for Terraform
-    runs-on: ubuntu-latest
-    env:
+  build-and-deploy:
+    name: Build and Deploy Infrastructure
+    runs-on: ubuntu-latest # Specifies the runner environment.
+    env: # Centralizes configuration of environment variables.
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      # TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2 # Checks out your repository under $GITHUB_WORKSPACE.
 
       - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+        uses: hashicorp/setup-terraform@v2 # Installs specified Terraform version for consistency.
         with:
-          terraform_version: 1.7.3 # Specify your Terraform version here
-      - name: Terraform Format
-        id: format
-        run: terraform fmt -check
+          terraform_version: 1.7.3
 
+      - name: Format Terraform Code
+        id: fmt
+        run: terraform fmt -check # Ensures Terraform files are properly formatted.
 
-      - name: Terraform Init
+      - name: Initialize Terraform
         id: init
-        run: terraform init
+        run: terraform init # Initializes Terraform in the project directory.
         working-directory: ./Terraform-Assignment
 
-      - name: Terraform Validate
+      - name: Validate Terraform Configuration
         id: validate
-        run: terraform validate
+        run: terraform validate # Validates the Terraform configuration for correctness.
         working-directory: ./Terraform-Assignment
 
-      - name: Terraform Plan
+      - name: Plan Terraform Deployment
         id: plan
-        run: terraform plan
+        run: terraform plan # Generates an execution plan to preview changes.
         working-directory: ./Terraform-Assignment
-        continue-on-error: true
+        continue-on-error: true # Continues even if plan indicates changes.
 
-      - name: Terraform Apply
+      - name: Apply Terraform Changes
         id: apply
-        run: terraform apply --auto-approve
+        run: terraform apply --auto-approve # Applies changes to reach desired state.
         working-directory: ./Terraform-Assignment
 
-      # Optional cleanup job to destroy resources
-      # Uncomment the following lines if you want to enable the cleanup step
-      - name: Terraform Destroy (Optional Cleanup Step)
-        if: always() # Ensure this step runs even if earlier steps failed
-        run: terraform destroy --auto-approve
+      - name: Optionally Destroy Infrastructure
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true' }}
+        run: terraform destroy --auto-approve # Destroys Terraform-managed infrastructure if opted-in.
         working-directory: ./Terraform-Assignment
 
-      # Error handling or notification step
-      # Corrected Debugging Step
-      - name: Echo Webhook URL
-        run: |
-          echo "Webhook URL is set."
-        env:
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      
-      - name: Notify Build Outcome
-        uses: ./.github/actions/send-notification
+      - name: Determine Build Outcome
+        id: outcome
+        run: | # Dynamically sets the outcome message based on job status.
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "BUILD_OUTCOME=Deployment succeeded!" >> $GITHUB_ENV
+          else
+            echo "BUILD_OUTCOME=Deployment failed. Check logs for details." >> $GITHUB_ENV
+
+      - name: Notify Slack on Build Outcome
+        uses: ./.github/actions/send-notification # Custom action to send notifications.
         with:
-          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: ${{ job.status == 'success' && 'Deployment succeeded!' || 'Deployment failed. Check logs for details.' }}
-
-          
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }} # Securely passes the Slack Webhook URL.
+          message: ${{ env.BUILD_OUTCOME }} # Sends the dynamic outcome message to Slack.
