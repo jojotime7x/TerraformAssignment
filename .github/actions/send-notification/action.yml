@@ -1,7 +1,7 @@
 name: 'Send Notification'
 description: 'Sends a notification message to Slack based on the build outcome.'
 inputs:
-  webhook-url:
+  webhook_url:
     description: 'The Slack webhook URL'
     required: true
   message:

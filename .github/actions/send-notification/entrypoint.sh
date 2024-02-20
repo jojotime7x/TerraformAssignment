@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Debug: Print the received inputs
+# Debug: Print the received inputs for verification
 echo "Received Webhook URL: '${INPUT_WEBHOOK_URL}'"
 echo "Received Message: '${INPUT_MESSAGE}'"
 
