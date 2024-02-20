@@ -124,7 +124,9 @@ This template provides a basic structure. Feel free to expand it with more detai
 ## Github Action Setup
 
 
-The file structure is 
+Once the build  and deploy is completed user gets the below message
+
+![alt text](image.png)
 
 
 
