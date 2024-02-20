@@ -1,0 +1,67 @@
+name: Terraform CI/CD Pipeline for Deploying AWS Resources
+run-name: ${{ github.actor }} has triggered the pipeline
+
+on:
+  push:
+    branches:
+      - 'main'
+
+
+
+jobs:
+  build-infra:
+    name: CI/CD Pipeline for Terraform
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # TF_VAR_aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      # TF_VAR_aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.7.3 # Specify your Terraform version here
+      - name: Terraform Format
+        id: format
+        run: terraform fmt -check
+
+
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./Terraform-Assignment
+
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+        working-directory: ./Terraform-Assignment
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        working-directory: ./Terraform-Assignment
+        continue-on-error: true
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply --auto-approve
+        working-directory: ./Terraform-Assignment
+
+      # Optional cleanup job to destroy resources
+      # Uncomment the following lines if you want to enable the cleanup step
+      # - name: Terraform Destroy (Optional Cleanup Step)
+      #   if: always() # Ensure this step runs even if earlier steps failed
+      #   run: terraform destroy --auto-approve
+      #   working-directory: ./Terraform-Assignment
+
+      # Error handling or notification step
+      - name: Notify Failures  with custom message
+        if: failure()
+        uses: ./.github/actions/send-notification # Example: a custom action to send notifications
+        with:
+          message: "Terraform deployment failed. Please check the GitHub Actions logs."
+          
