@@ -1,11 +1,11 @@
 #!/bin/sh
 
 # Debug: Print environment variables
-echo "Webhook URL: ${webhook-url}"
-echo "Message: ${message}"
+echo "Webhook URL: ${INPUT_WEBHOOK-URL}"
+echo "Message: ${INPUT_MESSAGE}"
 
 # Fetch environment variables set by GitHub Actions
-WEBHOOK_URL=${INPUT_WEBHOOK_URL}
+WEBHOOK_URL=${INPUT_WEBHOOK-URL}
 MESSAGE=${INPUT_MESSAGE}
 
 
