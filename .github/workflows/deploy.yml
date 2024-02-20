@@ -61,7 +61,17 @@ jobs:
       # Error handling or notification step
       - name: Notify Failures
         if: failure()
-        uses: ./.github/actions/send-notification # Example: a custom action to send notifications
+        uses: ./.github/actions/send-notification
         with:
-          message: "Terraform deployment failed. Please check the GitHub Actions logs."
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: 'Terraform deployment failed. Please check the GitHub Actions logs.'
+          status: failure
+        
+      - name: Notify Success
+        if: success()
+        uses: ./.github/actions/send-notification
+        with:
+          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          message: 'Terraform deployment was successful.'
+          status: success
           
