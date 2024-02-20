@@ -30,26 +30,26 @@ jobs:
         run: terraform fmt -check
 
 
-      # - name: Terraform Init
-      #   id: init
-      #   run: terraform init
-      #   working-directory: ./Terraform-Assignment
+      - name: Terraform Init
+        id: init
+        run: terraform init
+        working-directory: ./Terraform-Assignment
 
-      # - name: Terraform Validate
-      #   id: validate
-      #   run: terraform validate
-      #   working-directory: ./Terraform-Assignment
+      - name: Terraform Validate
+        id: validate
+        run: terraform validate
+        working-directory: ./Terraform-Assignment
 
-      # - name: Terraform Plan
-      #   id: plan
-      #   run: terraform plan
-      #   working-directory: ./Terraform-Assignment
-      #   continue-on-error: true
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan
+        working-directory: ./Terraform-Assignment
+        continue-on-error: true
 
-      # - name: Terraform Apply
-      #   id: apply
-      #   run: terraform apply --auto-approve
-      #   working-directory: ./Terraform-Assignment
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply --auto-approve
+        working-directory: ./Terraform-Assignment
 
       # Optional cleanup job to destroy resources
       # Uncomment the following lines if you want to enable the cleanup step
