@@ -3,15 +3,9 @@ name: Terraform CI/CD Pipeline for AWS Deployment
 
 # Triggers: Defines the conditions under which the workflow will run.
 on:
-  push: 
+  push:
     branches:
       - main # Executes the workflow on pushes to the 'main' branch.
-  workflow_dispatch: 
-    inputs:
-      destroy: 
-        description: 'Set to true to destroy infrastructure as part of this run'
-        required: false
-        default: 'true' # Manual trigger allows the option to destroy infrastructure.
 
 # Jobs: Defines the series of tasks that the workflow will execute.
 jobs:
@@ -23,6 +17,9 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # Optionally, define an environment variable for controlling destruction.
+      # This would need to be set in the GitHub repository's secrets.
+      DESTROY_INFRA: ${{ secrets.DESTROY_INFRA }}
 
     steps:
       - name: Checkout Repository
@@ -59,10 +56,10 @@ jobs:
         # Applies the Terraform plan to update infrastructure.
 
       - name: Optionally Destroy Infrastructure
-        if: ${{ github.event.inputs.destroy == 'true' }}
+        if: env.DESTROY_INFRA == 'true'
         run: terraform destroy --auto-approve
         working-directory: ./Terraform-Assignment
-        # Conditionally destroys the Terraform-managed infrastructure, based on manual trigger input.
+        # Conditionally destroys the Terraform-managed infrastructure based on the DESTROY_INFRA variable.
 
       - name: Determine Build Outcome
         run: |
