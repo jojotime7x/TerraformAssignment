@@ -11,7 +11,7 @@ on:
       destroy: # Optional input to decide if infrastructure should be destroyed.
         description: 'Set to true to destroy infrastructure as part of this run'
         required: false
-        default: 'false'
+        default: 'true'
 
 # Jobs: Collection of tasks this workflow will execute.
 jobs:
