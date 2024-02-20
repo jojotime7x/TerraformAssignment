@@ -59,7 +59,7 @@ jobs:
       #   working-directory: ./Terraform-Assignment
 
       # Error handling or notification step
-      - name: Notify Failures  with custom message
+      - name: Notify Failures
         if: failure()
         uses: ./.github/actions/send-notification # Example: a custom action to send notifications
         with:
