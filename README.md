@@ -1,49 +1,7 @@
 Author : Sathish Jonnalagadda
 Created Date : 17-02-2024
 
-# Terraform AWS Infrastructure Setup
 
-
-## File Structure
-```
-Terraform-Assignment/
-├── .github/
-│   └── workflows/
-│       └── deploy.yml          # GitHub Actions workflow for CI/CD
-├── Terraform-Assignment/
-│   ├── .gitignore              # Specifies intentionally untracked files to ignore
-│   ├── main.tf                 # Main Terraform configuration file
-│   ├── provider.tf             # Terraform provider configuration
-│   ├── terraform.tfvars        # Variables values for the Terraform configuration
-│   ├── variables.tf            # Declaration of variables used in the configuration
-│   ├── modules/                # Modular configurations for specific AWS resources
-│   │   ├── ec2/                # EC2 module with configurations for instances
-│   │   │   ├── data.tf         # Data sources for the EC2 module
-│   │   │   ├── main.tf         # Main configuration file for EC2 instances
-│   │   │   ├── outputs.tf      # Outputs from the EC2 module
-│   │   │   └── variables.tf    # Variables specific to the EC2 module
-│   │   ├── vpc/                # VPC module with configurations for networking
-│   │   │   ├── data.tf         # Data sources for the VPC module
-│   │   │   ├── main.tf         # Main configuration file for the VPC
-│   │   │   ├── outputs.tf      # Outputs from the VPC module
-│   │   │   └── variables.tf    # Variables specific to the VPC module
-│   │   └── Web_SecurityGroup/  # Module for web security group configurations
-│   │       ├── main.tf         # Security group configurations
-│   │       ├── outputs.tf      # Outputs from the security group module
-│   │       └── variables.tf    # Variables specific to the security group module
-│   └── user_data/              # Scripts for EC2 instance initialization
-│       └── nginx_userdata.sh   # Script to install and configure Nginx on EC2 instances
-└── README.md                   # This file
-
-```
-The file Structure follows the modular and resuable and standard  format for further usablity.
-
-
-Note the Subnets, IGW and NAT is not declared as separate module, can be declared separately as other modules like ec2, vpc, and web_securityGroup for further resubality and quality
-
-
-
-This Terraform configuration sets up a basic AWS infrastructure, including a Virtual Private Cloud (VPC), public and private subnets, and EC2 instances within the AWS Cloud. This setup is designed for educational or development purposes and should be customized for production environments.
 
 ## Overview
 
@@ -74,59 +32,118 @@ The configuration uses the following variables:
 - `env_prefix`: A prefix used for naming resources, indicating the environment.
 - `instance_type`: The instance type for the EC2 instances.
 
-## Usage Locally.
 
-1. **Clone the Repository**: Begin by cloning this repository to your local machine or download the Terraform configuration files.
 
-   ```
-   git clone <repository-url>
-   ```
+# Terraform AWS Infrastructure Setup
 
-2. **Initialize Terraform**: Navigate to the directory containing the Terraform configuration files and run:
 
-   ```
-   terraform init
-   ```
+## File Structure
+```
+TerraformAssignment/
+├── LICENSE
+├── README.md
+├── .github/
+│   ├── actions/
+│   │   └── send-notification/
+│   │       ├── action.yml       # Action definition for sending notifications.
+│   │       ├── Dockerfile       # Dockerfile for the send-notification action.
+│   │       └── entrypoint.sh    # Entry point script for the send-notification action.
+│   └── workflows/
+│       └── deploy.yml           # CI/CD workflow definition for Terraform deployment.
+└── Terraform-Assignment/
+    ├── .gitignore
+    ├── main.tf                  # Main Terraform configuration file.
+    ├── provider.tf              # Terraform provider configuration.
+    ├── terraform.tfvars         # Terraform variables definition.
+    ├── variables.tf             # Terraform variable declarations.
+    ├── modules/                 # Terraform modules.
+    │   ├── ec2/                 # EC2 module with configuration and variables.
+    │   ├── vpc/                 # VPC module with configuration and variables.
+    │   └── Web_SecurityGroup/   # Security group module with configuration and variables.
+    └── user_data/               # User data scripts for EC2 instances.
+        └── nginx_userdata.sh    # Nginx setup script for EC2 instances.
 
-3. **Review the Terraform Plan**: Generate and review the execution plan to see the actions Terraform will perform.
-
-   ```
-   terraform plan
-   ```
-
-4. **Apply the Configuration**: Apply the Terraform configuration to provision the AWS resources.
-
-   ```
-   terraform apply
-   ```
-
-   Confirm the action by typing `yes` when prompted.
-
-## Customization
-
-You can customize the configuration by modifying the variable values in `terraform.tfvars` or passing them through the command line.
-
-## Cleanup
-
-To destroy the resources created by this Terraform configuration, run:
 
 ```
-terraform destroy
-```
+The above file Structure follows the modular and resuable and standard  format for further usablity.
 
-Confirm the action by typing `yes` when prompted.
+
+Note the Subnets, IGW and NAT is not declared as separate module, can be declared separately as other modules like ec2, vpc, and web_securityGroup for further resubality and quality
+
+Here's a sample README.md content for your project setup, including the GitHub Actions workflow and Terraform infrastructure deployment:
 
 ---
 
-This template provides a basic structure. Feel free to expand it with more details specific to your project, such as descriptions of output values, detailed setup instructions for prerequisites, or additional customization options.
+# Terraform AWS Deployment
+
+This project automates the deployment of AWS resources using Terraform within a CI/CD pipeline implemented via GitHub Actions. It includes the provisioning of EC2 instances, VPC configurations, and security groups, with dynamic notifications sent to a Slack channel upon deployment outcomes.
+
+## GitHub Actions CI/CD Pipeline
+
+The CI/CD pipeline is managed through GitHub Actions, defined in `.github/workflows/deploy.yml`. It performs the following steps on each push to the repository:
+
+- Initializes Terraform.
+- Validates the Terraform configuration.
+- Plans the deployment.
+- Applies the changes to deploy the infrastructure.
+- Sends a notification to Slack with the deployment outcome.
+
+### Required Secrets
+
+Set the following secrets in your GitHub repository to enable the workflow:
+
+- `AWS_ACCESS_KEY_ID`: Your AWS access key.
+- `AWS_SECRET_ACCESS_KEY`: Your AWS secret access key.
+- `SLACK_WEBHOOK_URL`: The Webhook URL for Slack notifications.
+- `DESTROY_INFRA `: Set to 'true' if you want to enable automatic destruction of the deployed infrastructure as part of the CI/CD process. This is optional and should be used with caution.
+
+### Slack Notifications
+
+To receive notifications about the deployment status, create a Slack app and configure an incoming webhook in your desired Slack workspace/channel. Set the webhook URL as a secret (`SLACK_WEBHOOK_URL`) in your GitHub repository.
+
+## Terraform Configuration
+
+Terraform is used to define the infrastructure within AWS. The configuration files are located under the `Terraform-Assignment` directory. Before running the GitHub Actions workflow, ensure that your `terraform.tfvars` file contains the necessary variables for your AWS setup.
+
+## Deployment
+
+To deploy the infrastructure:
+
+1. Push changes to the repository to trigger the GitHub Actions workflow.
+2. Monitor the workflow execution in the Actions tab of your GitHub repository.
+3. Check the Slack channel for notifications regarding the deployment status.
 
 
-## Github Action Setup
+
+Below is the screenshot of job successful
+
+![notification hook](notification-hook.png)
 
 
-Once the build  and deploy is completed user gets the below message
+## destroy
 
-![alt text](image.png)
+To destroy the resources
+
+By Default the secret store is 'true' in the deploy.yaml
+env.DESTROY_INFRA == 'false'
+false based on your requirments i will set false to not destroy and true to destroy
+
+
+      - name: Optionally Destroy Infrastructure
+        if: env.DESTROY_INFRA == 'true' 
+        run: terraform destroy --auto-approve
+        working-directory: ./Terraform-Assignment
+        # Conditionally destroys the Terraform-managed infrastructure based on the DESTROY_INFRA variable.
+
+This Terraform configuration sets up a basic AWS infrastructure, including a Virtual Private Cloud (VPC), public and private subnets, and EC2 instances within the AWS Cloud. This setup is designed for educational or development purposes and should be customized for production environments.
+
+
+
+
+
+
+
+
 
 
 

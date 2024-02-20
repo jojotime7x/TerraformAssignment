@@ -59,7 +59,7 @@ jobs:
         run: echo "DESTROY_INFRA is set to '${{ env.DESTROY_INFRA }}'"
       
       - name: Optionally Destroy Infrastructure
-        if: env.DESTROY_INFRA == 'true'
+        if: env.DESTROY_INFRA == 'false'
         run: terraform destroy --auto-approve
         working-directory: ./Terraform-Assignment
         # Conditionally destroys the Terraform-managed infrastructure based on the DESTROY_INFRA variable.
