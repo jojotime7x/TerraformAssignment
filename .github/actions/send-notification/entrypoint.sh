@@ -1,5 +1,13 @@
 #!/bin/sh
 
+#!/bin/sh
+
+# Print all environment variables for debugging
+env
+
+# Or specifically print out the expected input
+echo "Webhook URL: '${INPUT_WEBHOOK_URL}'"
+
 # Ensure that script fails if any command fails
 set -e
 
