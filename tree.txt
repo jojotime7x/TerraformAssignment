@@ -1,0 +1,46 @@
+Folder PATH listing
+Volume serial number is D6A2-A72F
+C:.
+|   LICENSE
+|   README.md
+|   tree.txt
+|   
++---.github
+|   +---actions
+|   |   \---send-notification
+|   |           action.yaml
+|   |           Dockerfile
+|   |           entrypoint.sh
+|   |           
+|   \---workflows
+|       |   deploy.yml
+|       |   
+|       \---send-notification
+\---Terraform-Assignment
+    |   .gitignore
+    |   main.tf
+    |   provider.tf
+    |   terraform.tfvars
+    |   variables.tf
+    |   
+    +---modules
+    |   +---ec2
+    |   |       data.tf
+    |   |       main.tf
+    |   |       outputs.tf
+    |   |       variables.tf
+    |   |       
+    |   +---vpc
+    |   |       data.tf
+    |   |       main.tf
+    |   |       outputs.tf
+    |   |       variables.tf
+    |   |       
+    |   \---Web_SecurityGroup
+    |           main.tf
+    |           outputs.tf
+    |           variables.tf
+    |           
+    \---user_data
+            nginx_userdata.sh
+            
