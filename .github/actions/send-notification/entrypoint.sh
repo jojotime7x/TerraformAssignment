@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Debug: Print environment variables
 echo "Webhook URL: ${INPUT_WEBHOOK_URL}"
