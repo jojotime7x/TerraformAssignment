@@ -1,5 +1,4 @@
 # .github/actions/send-notification/action.yml
-
 name: 'Send Notification'
 description: 'Send a notification to a Slack channel'
 inputs:
@@ -10,5 +9,5 @@ inputs:
     description: 'Message to send'
     required: true
 runs:
-  using: 'shell'
-  main: 'entrypoint.sh'
+  using: 'docker'
+  image: 'Dockerfile'
