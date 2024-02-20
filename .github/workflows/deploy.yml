@@ -55,6 +55,9 @@ jobs:
         working-directory: ./Terraform-Assignment
         # Applies the Terraform plan to update infrastructure.
 
+      - name: Echo DESTROY_INFRA Value
+        run: echo "DESTROY_INFRA is set to '${{ env.DESTROY_INFRA }}'"
+      
       - name: Optionally Destroy Infrastructure
         if: env.DESTROY_INFRA == 'true'
         run: terraform destroy --auto-approve
