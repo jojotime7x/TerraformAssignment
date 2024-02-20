@@ -11,7 +11,7 @@ on:
       destroy: 
         description: 'Set to true to destroy infrastructure as part of this run'
         required: false
-        default: 'false' # Manual trigger allows the option to destroy infrastructure.
+        default: 'true' # Manual trigger allows the option to destroy infrastructure.
 
 # Jobs: Defines the series of tasks that the workflow will execute.
 jobs:
