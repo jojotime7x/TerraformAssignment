@@ -1,12 +1,11 @@
-# .github/actions/send-notification/action.yml
 name: 'Send Notification'
-description: 'Send a notification to a Slack channel'
+description: 'Sends a notification message to Slack'
 inputs:
   webhook-url:
-    description: 'Webhook URL for the Slack channel'
+    description: 'The Slack webhook URL'
     required: true
   message:
-    description: 'Message to send'
+    description: 'The message to send'
     required: true
 runs:
   using: 'docker'
