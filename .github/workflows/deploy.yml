@@ -59,11 +59,17 @@ jobs:
       #   working-directory: ./Terraform-Assignment
 
       # Error handling or notification step
-    
+      # Corrected Debugging Step
+      - name: Echo Webhook URL
+        run: |
+          echo "Webhook URL is set."
+        env:
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      
       - name: Notify Build Outcome
         uses: ./.github/actions/send-notification
         with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
           message: ${{ job.status == 'success' && 'Deployment succeeded!' || 'Deployment failed. Check logs for details.' }}
 
           
