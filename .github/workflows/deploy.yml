@@ -67,9 +67,9 @@ jobs:
       - name: Determine Build Outcome
         run: |
           if [ "${{ job.status }}" == "success" ]; then
-            echo "BUILD_OUTCOME=Deployment succeeded!" >> $GITHUB_ENV
+            echo "BUILD_OUTCOME=Job successfull !" >> $GITHUB_ENV
           else
-            echo "BUILD_OUTCOME=Deployment failed. Check logs for details." >> $GITHUB_ENV
+            echo "BUILD_OUTCOME=Job failed. Check logs for details." >> $GITHUB_ENV
           fi
         # Sets the build outcome based on the job status for use in the notification step.
 
