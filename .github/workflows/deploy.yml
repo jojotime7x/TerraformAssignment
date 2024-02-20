@@ -30,48 +30,40 @@ jobs:
         run: terraform fmt -check
 
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-        working-directory: ./Terraform-Assignment
+      # - name: Terraform Init
+      #   id: init
+      #   run: terraform init
+      #   working-directory: ./Terraform-Assignment
 
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate
-        working-directory: ./Terraform-Assignment
+      # - name: Terraform Validate
+      #   id: validate
+      #   run: terraform validate
+      #   working-directory: ./Terraform-Assignment
 
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan
-        working-directory: ./Terraform-Assignment
-        continue-on-error: true
+      # - name: Terraform Plan
+      #   id: plan
+      #   run: terraform plan
+      #   working-directory: ./Terraform-Assignment
+      #   continue-on-error: true
 
-      - name: Terraform Apply
-        id: apply
-        run: terraform apply --auto-approve
-        working-directory: ./Terraform-Assignment
+      # - name: Terraform Apply
+      #   id: apply
+      #   run: terraform apply --auto-approve
+      #   working-directory: ./Terraform-Assignment
 
       # Optional cleanup job to destroy resources
       # Uncomment the following lines if you want to enable the cleanup step
-      # - name: Terraform Destroy (Optional Cleanup Step)
-      #   if: always() # Ensure this step runs even if earlier steps failed
-      #   run: terraform destroy --auto-approve
-      #   working-directory: ./Terraform-Assignment
+      - name: Terraform Destroy (Optional Cleanup Step)
+        if: always() # Ensure this step runs even if earlier steps failed
+        run: terraform destroy --auto-approve
+        working-directory: ./Terraform-Assignment
 
       # Error handling or notification step
-      - name: Notify Failures
-        if: failure()
+    
+      - name: Notify Build Outcome
         uses: ./.github/actions/send-notification
         with:
           webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: 'Terraform deployment failed. Please check the GitHub Actions logs.'
-          status: failure
-        
-      - name: Notify Success
-        if: success()
-        uses: ./.github/actions/send-notification
-        with:
-          webhook-url: ${{ secrets.SLACK_WEBHOOK_URL }}
-          message: 'Terraform deployment was successful.'
-          status: success
+          message: ${{ job.status == 'success' && 'Deployment succeeded!' || 'Deployment failed. Check logs for details.' }}
+
           
