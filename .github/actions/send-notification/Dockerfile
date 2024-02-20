@@ -1,8 +1,7 @@
-# Use an official lightweight Alpine image.
 FROM alpine:3.17
 
-# Install curl
-RUN apk add --no-cache curl
+# Install curl and jq
+RUN apk add --no-cache curl jq
 
 # Copy the entrypoint script into the container
 COPY entrypoint.sh /entrypoint.sh
