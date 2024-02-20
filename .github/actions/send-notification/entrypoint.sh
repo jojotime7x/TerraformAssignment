@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Fetch environment variables set by GitHub Actions
 WEBHOOK_URL=${INPUT_WEBHOOK_URL}
