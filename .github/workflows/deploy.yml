@@ -10,7 +10,7 @@ on:
     inputs:
       destroy: # Optional input to decide if infrastructure should be destroyed.
         description: 'Set to true to destroy infrastructure as part of this run'
-        required: false
+        required: true
         default: 'true'
 
 # Jobs: Collection of tasks this workflow will execute.
@@ -57,6 +57,7 @@ jobs:
         working-directory: ./Terraform-Assignment
 
       - name: Optionally Destroy Infrastructure
+        id: destroy
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.destroy == 'true' }}
         run: terraform destroy --auto-approve # Destroys Terraform-managed infrastructure if opted-in.
         working-directory: ./Terraform-Assignment
