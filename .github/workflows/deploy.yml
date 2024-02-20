@@ -62,12 +62,18 @@ jobs:
         working-directory: ./Terraform-Assignment
 
       - name: Determine Build Outcome
-        id: outcome
-        run: | # Dynamically sets the outcome message based on job status.
+        run: |
           if [ "${{ job.status }}" == "success" ]; then
             echo "BUILD_OUTCOME=Deployment succeeded!" >> $GITHUB_ENV
           else
             echo "BUILD_OUTCOME=Deployment failed. Check logs for details." >> $GITHUB_ENV
+          fi
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          TERRAFORM_CLI_PATH: /home/runner/work/_temp/aa42b80d-fba1-40fe-b120-f9fcf8fd9fa2
+      
 
       - name: Notify Slack on Build Outcome
         uses: ./.github/actions/send-notification # Custom action to send notifications.
